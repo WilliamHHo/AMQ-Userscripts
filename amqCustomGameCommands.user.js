@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        	AMQ Custom Game Commands
-// @version     	0.5
+// @version     	0.51
 // @description 	Chat commands for custom game modes. Credits to nyamu and ayyu for the original concept
 // @match       	https://animemusicquiz.com/*
 // @grant       	none
@@ -9,7 +9,6 @@
 
 /* The following commands are currently supported:
 
-		/spies : Randomly assigns a target for each player
 		/aliens (number) : Randomly assigns aliens and humans. Defaults to 2 aliens if no number is specified
 		/warlords : Picks a random member from each team
 		/relay : Picks a random order for each team
@@ -33,7 +32,7 @@
             || quiz.gameMode == 'Ranked'
             || (!quiz.inQuiz && !lobby.inLobby)) return;
 
-        if (!(payload.message.startsWith('/spies') || payload.message.startsWith('/aliens') || payload.message.startsWith('/warlords') ||
+        if (!(payload.message.startsWith('/aliens') || payload.message.startsWith('/warlords') ||
               payload.message.startsWith('/relay') || payload.message.startsWith('/pick'))) return;
 
         let names = [];
@@ -55,14 +54,6 @@
 
         let timeout = 0;
         var i = 0
-        if (payload.message.startsWith('/spies')) {
-            for (i = 0; i < names.length; i++) {
-                const assassin = names[i];
-                const spy = names[(i + 1) % names.length];
-                setTimeout(function(){ sendDMMessage("Your Target is: " + spy, assassin); }, timeout);
-                timeout = timeout + 500;
-            }
-        }
 
         if (payload.message.startsWith('/aliens')) {
             let numberOfAliens = 2;

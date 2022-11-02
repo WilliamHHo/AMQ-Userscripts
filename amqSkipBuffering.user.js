@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AMQ Skip Buffering
-// @version      1.0
+// @version      1.5
 // @description  Automatically skips to the next song when enabled even if there's buffering
 // @match        https://animemusicquiz.com/*
 // @grant        none
@@ -9,7 +9,8 @@
 /* Usage:
 
 Toggle ON/OFF: Alt+W
-It will display the state in the chat everytime you press Alt+W
+Manually Skip: Alt+X
+It will display the state in the chat everytime you press Alt+W or Alt+X
 
 */
 
@@ -21,9 +22,20 @@ let songID;
 function dockeyup(event) {
     if (event.altKey && event.keyCode == 87) {
         toggled_ON = !toggled_ON;
-        console.log("Skip Buffering: toggle ", toggled_ON)
         logToChat(`Skip Buffering: toggle ${toggled_ON ? 'ON' : 'OFF'}`)
     }
+
+    if (event.altKey && event.keyCode == 88) {
+        socket.sendCommand({
+            type: "quiz",
+            command: "video ready",
+            data: {
+                songId: songID,
+            },
+        });
+        logToChat(`Skipping to Next Song`)
+    }
+
 }
 
 function logToChat(message) {
